@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0b0d10">
+<title>SEEKER — Ethereum NFT Intelligence</title>
+<style>
+:root{--bg:#0b0d10;--panel:#12161c;--line:#252c35;--muted:#929ba8;--text:#f3f5f7;--accent:#b9f36b;--red:#ff6b6b;--amber:#f4c76b}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -20%,#1b2530 0%,var(--bg) 55%);color:var(--text);font:16px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;min-height:100vh}
+.wrap{width:min(920px,calc(100% - 40px));margin:auto}.top{display:flex;justify-content:space-between;align-items:center;padding:28px 0;border-bottom:1px solid var(--line)}
+.brand{font-weight:850;letter-spacing:.22em;font-size:20px}.chain{color:var(--muted);font-size:11px;letter-spacing:.14em}
+main{padding:86px 0 70px;text-align:center}.eyebrow{color:var(--accent);font-size:11px;letter-spacing:.2em;font-weight:700}
+h1{font-size:clamp(36px,7vw,62px);line-height:1.02;letter-spacing:-.055em;margin:18px 0 14px}
+.sub{color:var(--muted);font-size:16px;margin:0 auto 38px;max-width:510px}
+.search{display:flex;gap:10px;max-width:700px;margin:0 auto;background:#10141a;border:1px solid #343d48;border-radius:14px;padding:8px;box-shadow:0 18px 60px #0005}
+.search input{flex:1;min-width:0;background:transparent;border:0;outline:0;color:var(--text);padding:13px 14px;font:inherit;font-size:14px}
+.search input::placeholder{color:#687381}
+button{border:0;border-radius:9px;background:var(--accent);color:#11170b;font-weight:800;letter-spacing:.04em;padding:0 20px;min-height:48px;cursor:pointer}
+button:hover{filter:brightness(1.06)}button:disabled{opacity:.6;cursor:wait}
+.hint{color:#737e8b;font-size:11px;margin-top:13px}
+.result{display:none;margin:58px auto 0;max-width:760px;text-align:left;border:1px solid var(--line);border-radius:18px;background:linear-gradient(180deg,#141a21,#101419);padding:28px}
+.result.show{display:block;animation:rise .45s ease}@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.result-head{display:flex;justify-content:space-between;gap:16px;align-items:center;border-bottom:1px solid var(--line);padding-bottom:18px}
+.result-head h2{font-size:16px;margin:0;overflow-wrap:anywhere}.status{font-size:10px;letter-spacing:.12em;color:var(--amber);border:1px solid #66552c;padding:5px 8px;border-radius:20px;white-space:nowrap}
+.gauge-wrap{width:min(390px,100%);margin:24px auto 4px;text-align:center}.gauge{width:100%;overflow:visible}.score{font-size:48px;font-weight:800;letter-spacing:-.05em}.score small{font-size:15px;color:var(--muted);font-weight:500;letter-spacing:0}.score-label{font-size:11px;letter-spacing:.16em;color:var(--accent);font-weight:800;margin-top:-3px}
+.note{font-size:12px;color:var(--muted);text-align:center;margin:12px auto 24px;max-width:470px}
+.metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.metric{padding:14px;border:1px solid var(--line);border-radius:11px;background:#0e1217}.metric span{display:block;color:var(--muted);font-size:11px}.metric b{display:block;font-size:15px;margin-top:3px}
+.disclaimer{border-top:1px solid var(--line);margin-top:20px;padding-top:16px;color:#8993a0;font-size:11px}
+footer{border-top:1px solid var(--line);padding:22px 0 34px;color:#697482;font-size:11px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+@media(max-width:600px){main{padding:64px 0 54px}.search{display:block;background:none;border:0;box-shadow:none;padding:0}.search input{width:100%;height:54px;background:#10141a;border:1px solid #343d48;border-radius:10px;margin-bottom:9px}.search button{width:100%}.result{padding:18px}.metrics{grid-template-columns:1fr}.result-head{align-items:flex-start;flex-direction:column}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top"><div class="brand">SEEKER</div><div class="chain">ETHEREUM NFT INTELLIGENCE</div></header>
+<main>
+<div class="eyebrow">DISCOVER WHAT OTHERS OVERLOOK.</div>
+<h1>Look beyond<br>the floor price.</h1>
+<p class="sub">Independent research into the art, history and technology behind Ethereum NFT collections.</p>
+<form class="search" id="searchForm">
+<input id="contract" aria-label="Ethereum NFT contract address" placeholder="Enter Ethereum collection contract address" autocomplete="off" spellcheck="false">
+<button id="analyze" type="submit">ANALYZE COLLECTION</button>
+</form>
+<div class="hint">Ethereum Mainnet only · Enter a collection contract address</div>
+
+<section class="result" id="result" aria-live="polite">
+<div class="result-head"><h2 id="collection">SEEKER score preview</h2><span class="status">DESIGN PREVIEW</span></div>
+<div class="gauge-wrap">
+<svg class="gauge" viewBox="0 0 360 220" role="img" aria-label="Illustrative semicircular score gauge">
+<defs><linearGradient id="arc" x1="0" x2="1"><stop offset="0" stop-color="#ff7777"/><stop offset=".48" stop-color="#f4c76b"/><stop offset="1" stop-color="#b9f36b"/></linearGradient></defs>
+<path d="M 48 184 A 132 132 0 0 1 312 184" fill="none" stroke="#29313a" stroke-width="18" stroke-linecap="round"/>
+<path d="M 48 184 A 132 132 0 0 1 312 184" fill="none" stroke="url(#arc)" stroke-width="18" stroke-linecap="round" pathLength="100" stroke-dasharray="87 100"/>
+<g stroke="#75808c" stroke-width="2"><path d="M48 184l-10 0"/><path d="M180 52v-10"/><path d="M312 184h10"/></g>
+<g id="needle" transform="rotate(66 180 184)"><path d="M180 184 L180 69" stroke="#f4f6f8" stroke-width="3" stroke-linecap="round"/><circle cx="180" cy="184" r="8" fill="#f4f6f8"/><circle cx="180" cy="184" r="3" fill="#11161c"/></g>
+<g fill="#8993a0" font-size="10"><text x="35" y="204">0</text><text x="174" y="31">50</text><text x="313" y="204">100</text></g>
+</svg>
+<div class="score">87<small> / 100</small></div><div class="score-label">ILLUSTRATIVE SCORE</div>
+</div>
+<p class="note">This is a visual placeholder only. No collection data has been retrieved and no real SEEKER score has been calculated.</p>
+<div class="metrics">
+<div class="metric"><span>Art &amp; cultural significance</span><b>Awaiting research</b></div>
+<div class="metric"><span>Technical innovation</span><b>Awaiting verification</b></div>
+<div class="metric"><span>Artist &amp; collector context</span><b>Awaiting research</b></div>
+<div class="metric"><span>Onchain status</span><b>Not yet verified</b></div>
+</div>
+<div class="disclaimer">SEEKER is a research and evaluation tool, not financial or investment advice. Scores will be based on documented criteria, source quality and available evidence. Missing data will be marked as unknown—not automatically treated as negative.</div>
+</section>
+</main>
+<footer><span>SEEKER · ETHEREUM NFT INTELLIGENCE</span><span>Research. Context. Discovery.</span></footer>
+</div>
+<script>
+const form=document.getElementById('searchForm');
+const input=document.getElementById('contract');
+const result=document.getElementById('result');
+const button=document.getElementById('analyze');
+const title=document.getElementById('collection');
+const addressPattern=/^0x[a-fA-F0-9]{40}$/;
+form.addEventListener('submit',e=>{
+ e.preventDefault();
+ const address=input.value.trim();
+ if(!addressPattern.test(address)){input.setCustomValidity('Please enter a valid  Ethereum contract address (0x + 40 hexadecimal characters).');input.reportValidity();return;}
+ input.setCustomValidity('');
+ title.textContent='Collection contract: '+address;
+ result.classList.add('show');
+ result.scrollIntoView({behavior:'smooth',block:'start'});
+});
+input.addEventListener('input',()=>input.setCustomValidity(''));
+</script>
+</body>
+</html>
